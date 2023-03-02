@@ -1,0 +1,126 @@
+
+<!doctype html>
+<html lang="en">
+  <head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+     <link rel="stylesheet" href="static/css/style.css">
+      <script src="static/js/main.js"></script>
+      <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+      <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+
+    <title>crop yield prediction system</title>
+  </head>
+
+<body class="bg-dark">
+    <div class="container">
+        <div class="raw">
+            <div class="card mt-50">
+                <div class="card-header" style="text-align:center">
+                    <div class="col-12">
+                        <h1>WELCOME  TO CROP YIELD PREDICTION</h1>
+                    </div>
+
+                </div>
+                <div class="card-body">
+                    <form method="POST"  acept-charset="utf-8">
+                        <div class="col-18 form-group" style="text-align:center">
+                            <label><b>SELECT COUNTY:</b></label>
+                            <select class="selectpicker form-control" id="county" name="county" required="1" onchange="load_crops(county.id), crop" >
+                                {% for county in counties %}
+                                <option value="{{ county }}">{{ county }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-18 form-group" style="text-align:center">
+                            <label><b>SELECT YOUR CROP:</b></label>
+                            <select class="selectpicker form-control" id="item" name="item" required="1">
+                                {% for item in items %}
+                                <option value="{{ item }}">{{ item }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-18 form-group" style="text-align:center">
+                            <label><b>SELECT YOUR GOOD SEASON:</b></label>
+                            <select class="selectpicker form-control" id="season" name="season" required="1">
+                                {% for season in seasons %}
+                                <option value="{{ season }}">{{ season }}</option>
+                                {% endfor %}
+
+                            </select>
+                        </div>
+                         <div class="col-18 form-group" style="text-align:center">
+                            <label><b>SELECT LEVE OF TEMPERETURE:</b></label>
+                            <select class="selectpicker form-control" id="temp" name="temp" required="1">
+                                {% for temp in temps %}
+                                <option value="{{ temp }}">{{ temp }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                         <div class="col-18 form-group" style="text-align:center">
+                            <label><b>SELECT AMOUNT OF RAINFALL:</b></label>
+                            <select class="selectpicker form-control" id="rainfall" name="rainfall" required="1">
+                                {% for rainfall in rainfalls %}
+                                <option value="{{ rainfall }}">{{ rainfall }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                         <div class="col-18 form-group" style="text-align:center">
+                            <label><b>SELECT LEVEL OF PH:</b></label>
+                            <select class="selectpicker form-control" id="ph" name="ph" required="1">
+                                {% for ph in phs %}
+                                <option value="{{ ph }}">{{ ph }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                            <br>
+                            <div class="col-18 form-group">
+                            <button class="btn btn-primary form-control" onclick="send_data()">PREDICT YIELD</button>
+                            </div>
+                    </form>
+                    <br>
+                    <div class="row">
+                        <div class="col-12" style="text-align:center;">
+                            <h3><span id="prediction"></span></h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+ <script>
+     function load_crops(county_id, crop_id){
+     var county = document.getElementById(county_id);
+     var crop = document.getElementById(crop_id);
+     }
+     function form_handler(event)
+     {
+     event.preventDefault();
+     }
+     function send_data()
+     {
+     document.querySelector('form').addEventListener('submit', form_handler);
+     var fd = new FormData(document.querySelector('form'));
+     var xhr = new XMLHttpRequest();
+     xhr.open('POST', '/predict', true);
+     document.getElementById("prediction").innerHTML = "wait prediction";
+     xhr.onreadystatechange = function()
+     {
+     if(xhr.readyState == XMLHttpRequest.DONE)
+     {
+     document.getElementById("prediction").innerHTML = "predicted yield: " +xhr.responseText;
+     }
+     }
+     xhr.onload = function(){};
+     xhr.send(fd);
+     }
+
+ </script>
+  </body>
+</html>
